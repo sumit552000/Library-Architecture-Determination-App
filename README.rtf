@@ -1,0 +1,90 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2821
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 # Library Architecture Determination (Android App)\
+\
+## Objective\
+This Android app scans a user\uc0\u8209 selected folder for native library files (.so), determines the CPU architecture (ABI) for each library by reading its ELF header, and displays the results in a table format. \
+It works with any input folder selected by the user \'97 no hardcoded paths.\
+\
+---\
+\
+## Features\
+- Select any folder using Storage Access Framework (SAF).\
+- Detects CPU architecture type automatically by parsing ELF headers.\
+- Supports multiple architectures:\
+  - ARM (32-bit / armeabi-v7a)\
+  - ARM64 (AArch64 / arm64-v8a)\
+  - x86, x86-64\
+  - MIPS\
+  - RISC-V, PowerPC, IA-64 (and more from ELF spec).\
+- Displays results in a formatted monospaced table.\
+- Ignores non-.so files.\
+\
+---\
+\
+## Installation Options\
+\
+### Option 1: Run via APK (Recommended for quick test)\
+1. I have attached a **ready-to-install APK** with this project.\
+2. Copy the APK to your Android device.\
+3. Enable **Install from Unknown Sources** in your device settings (if not already enabled).\
+4. Tap the APK file to install it.\
+5. Open the app from your device\'92s launcher.\
+\
+### Option 2: Build & Run via Android Studio\
+1. Open this project in **Android Studio**.\
+2. Connect an Android device (or start an emulator).\
+3. Run the project (`Run \uc0\u8594  Run 'app'` or press Shift+F10).\
+4. The app will install and launch automatically on the device/emulator.\
+\
+---\
+\
+## How It Works\
+1. Tap **Pick Folder** \uc0\u8594  select the folder containing `.so` files (e.g., Downloads/sample_libs).\
+2. Tap **Check Libraries** \uc0\u8594  the app scans all `.so` files in the folder.\
+3. For each `.so` file:\
+   - Confirms ELF format (`0x7F 'E' 'L' 'F'` magic bytes).\
+   - Detects endianness from ELF header.\
+   - Reads the `e_machine` field to determine architecture.\
+   - Maps it to ABI name (or shows as `Unknown (e_machine=XYZ)` if not recognized).\
+4. Results are displayed in a formatted table on screen.\
+\
+---\
+\
+## Example Output\
+Total number of libraries: 6\
+\
+File                           ArchType\
+====                           ========\
+libanw.14.so                   ARM (32-bit)\
+libudev.so                     ARM (32-bit)\
+libanw.18.so                   x86\
+libiomx.13.so                  MIPS\
+libARMClientService_arm64-v8a.so ARM64 (AArch64)\
+libjniloader.so                x86-64\
+\
+---\
+\
+## Requirements\
+- Android device or emulator\
+- For APK: Android 8.0 (API 26) or higher\
+- For source build: Android Studio (latest stable), Java 8+\
+\
+---\
+\
+## References\
+- ELF Specification (Linux Foundation): https://refspecs.linuxfoundation.org/elf/elf.pdf\
+- Android Developers \'96 Storage Access Framework: https://developer.android.com/guide/topics/providers/document-provider\
+\
+---\
+\
+## Notes\
+- Works with **any folder input** selected at runtime.\
+- If the architecture type is new or unknown, the app shows the raw `e_machine` value so it can be extended easily.\
+- No system commands (`exec`, `popen`, etc.) are used \'97 this is **pure Java ELF parsing**.\
+- For quick evaluation, just install and run the attached APK.}
